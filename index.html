@@ -19,9 +19,7 @@
   h2 {
     color: #8b4513;
   }
-  .hidden { 
-    display:none; 
-  }
+  .hidden { display:none; }
   .box {
     background:#fff; 
     padding:20px; 
@@ -41,13 +39,9 @@
   button:hover {
     background:#a05a2a;
   }
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
   input {
     padding: 10px;
-    width: 200px;
+    width: 220px;
     border-radius: 6px;
     border: 1px solid #b3895b;
   }
@@ -57,7 +51,7 @@
     border: 1px solid #b3895b;
     min-width: 220px;
   }
-  .note {
+  .small {
     font-size: 0.9rem;
     color: #555;
     margin-top: 8px;
@@ -101,22 +95,14 @@
     <p>
       During the event, we will each try to guess <strong>who bought us our meal</strong>.  
     </p>
-    <p style="font-style:italic;">
-      Generate the assignments once, then each person can privately reveal who they have.
+    <p class="small">
+      Select your name below to privately see who you are buying a meal for.
+      Every device uses the same draw, so the assignments are consistent for everyone.
     </p>
   </div>
 
-  <button id="generate-btn" onclick="generateDraw()" style="margin-top:20px;">
-    Generate Assignments
-  </button>
-
-  <div id="results" class="box hidden">
+  <div class="box">
     <h2>Get Your Assignment</h2>
-    <p>
-      Select your name, lock it in, and then reveal your person.<br>
-      <strong>Only one person should use this page to generate the assignments.</strong>
-    </p>
-
     <label for="who"><strong>I am:</strong></label><br>
     <select id="who">
       <option value="">-- Select your name --</option>
@@ -128,20 +114,9 @@
       <option value="Taylor">Taylor</option>
     </select>
     <br>
-    <button id="lock-btn" onclick="lockName()">Lock my name</button>
+    <button onclick="revealPerson()">Reveal my person</button>
 
-    <p id="locked-message" class="hidden">
-      You are locked in as: <strong id="locked-name-text"></strong>
-    </p>
-
-    <button id="reveal-btn" onclick="revealPerson()" disabled>
-      Reveal my person
-    </button>
-
-    <p class="note">
-      Tip: Only one person should be at the screen at a time. Once your name is locked, 
-      don’t change devices or refresh the page before you reveal.
-    </p>
+    <p id="result-text" class="small" style="margin-top:15px;"></p>
   </div>
 
 </div>
@@ -152,139 +127,4 @@
 function checkPW() {
   const correct = "beansgreenspotatoestomatoes";
   if (document.getElementById("pw").value === correct) {
-    document.getElementById("pw-screen").classList.add("hidden");
-    document.getElementById("main").classList.remove("hidden");
-  } else {
-    alert("Incorrect password.");
-  }
-}
-
-// -------------------- GLOBAL DATA --------------------
-const names = [
-  "Kevin",
-  "Devin",
-  "Justin H.",
-  "Zikiyah",
-  "Justin G.",
-  "Taylor"
-];
-
-const partners = {
-  "Kevin":"Devin","Devin":"Kevin",
-  "Justin H.":"Zikiyah","Zikiyah":"Justin H.",
-  "Justin G.":"Taylor","Taylor":"Justin G."
-};
-
-let assignment = null;   // will hold the final mapping
-let hasGenerated = false;
-let lockedName = null;
-
-// -------------------- GENERATE DRAW --------------------
-function shuffle(a){ 
-  return a.sort(() => Math.random() - 0.5); 
-}
-
-function generateDraw() {
-  let receivers, valid = false;
-  assignment = {};
-
-  for (let attempt = 0; attempt < 600; attempt++) {
-    receivers = shuffle([...names]);
-    let ok = true;
-    assignment = {};
-
-    for (let i = 0; i < names.length; i++) {
-      let g = names[i];
-      let r = receivers[i];
-      // no self and no partner
-      if (g === r || partners[g] === r) {
-        ok = false;
-        break;
-      }
-      assignment[g] = r;
-    }
-    if (ok) {
-      valid = true;
-      break;
-    }
-  }
-
-  if (!valid) {
-    alert("Could not generate a valid draw. Please try again.");
-    assignment = null;
-    return;
-  }
-
-  hasGenerated = true;
-
-  // Show the results box with dropdown + buttons
-  const res = document.getElementById("results");
-  res.classList.remove("hidden");
-
-  // Disable generate button so assignments don't change mid-use
-  const genBtn = document.getElementById("generate-btn");
-  genBtn.disabled = true;
-  genBtn.textContent = "Assignments Locked In ✅";
-
-  // Reset any previous lock
-  lockedName = null;
-  document.getElementById("who").value = "";
-  document.getElementById("locked-message").classList.add("hidden");
-  document.getElementById("locked-name-text").textContent = "";
-  document.getElementById("reveal-btn").disabled = true;
-}
-
-// -------------------- LOCK NAME --------------------
-function lockName() {
-  if (!hasGenerated || !assignment) {
-    alert("Please generate the assignments first.");
-    return;
-  }
-
-  const select = document.getElementById("who");
-  const chosen = select.value;
-
-  if (!chosen) {
-    alert("Please select your name first.");
-    return;
-  }
-
-  lockedName = chosen;
-
-  // Lock the dropdown so it can't be changed
-  select.disabled = true;
-  document.getElementById("lock-btn").disabled = true;
-
-  // Show locked message
-  document.getElementById("locked-name-text").textContent = lockedName;
-  document.getElementById("locked-message").classList.remove("hidden");
-
-  // Enable reveal button
-  document.getElementById("reveal-btn").disabled = false;
-}
-
-// -------------------- REVEAL PERSON --------------------
-function revealPerson() {
-  if (!hasGenerated || !assignment) {
-    alert("Please generate the assignments first.");
-    return;
-  }
-
-  if (!lockedName) {
-    alert("Please lock your name first.");
-    return;
-  }
-
-  const target = assignment[lockedName];
-
-  if (!target) {
-    alert("Something went wrong finding your assignment. Please ask the host to regenerate.");
-    return;
-  }
-
-  alert(lockedName + ", you will be buying a meal for: " + target);
-}
-</script>
-
-</body>
-</html>
+    document.getElementById("pw-s

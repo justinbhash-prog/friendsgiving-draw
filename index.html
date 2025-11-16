@@ -11,61 +11,119 @@
     max-width: 720px;
     margin: auto;
   }
-  h1 { color: #8b4513; text-align: center; }
+  h1 { 
+    color: #8b4513; 
+    text-align: center; 
+    font-size: 2.2rem;
+  }
   .hidden { display:none; }
   .box {
-    background:#fff; padding:20px; border-radius:10px; margin-top:20px;
+    background:#fff; 
+    padding:20px; 
+    border-radius:10px; 
+    margin-top:20px;
     border:1px solid #d2a679;
   }
   button {
-    padding:10px 14px; background:#8b4e24; color:white; border:none;
-    border-radius:6px; cursor:pointer;
+    padding:10px 14px; 
+    background:#8b4e24; 
+    color:white; 
+    border:none;
+    border-radius:6px; 
+    cursor:pointer;
+    margin-top: 10px;
+  }
+  button:hover {
+    background:#a05a2a;
+  }
+  input {
+    padding: 10px;
+    width: 200px;
+    border-radius: 6px;
+    border: 1px solid #b3895b;
   }
 </style>
 </head>
+
 <body>
 
-<h1>🦃 Virtual Friendsgiving Secret Gift Draw</h1>
+<h1>🦃 Virtual Friendsgiving Draw</h1>
 
+<!-- PASSWORD SCREEN -->
 <div id="pw-screen">
-  <h2>Enter Password</h2>
-  <input type="password" id="pw" placeholder="Password">
-  <br><br>
-  <button onclick="checkPW()">Enter</button>
+  <h2 style="text-align:center;">Enter Password</h2>
+  <div style="text-align:center;">
+    <input type="password" id="pw" placeholder="Password"><br><br>
+    <button onclick="checkPW()">Enter</button>
+  </div>
 </div>
 
+<!-- MAIN CONTENT -->
 <div id="main" class="hidden">
+
   <div class="box">
-    <h2>Friendsgiving Rules</h2>
-    <p>🎁 Everyone gets a random person to buy a gift for.</p>
-    <p>🚫 Partners cannot get each other.</p>
-    <p>💵 Suggested Limit: $25–$35</p>
+    <h2>Welcome to Virtual Friendsgiving!</h2>
+    <p>
+      This year's celebration will be a <strong>virtual Friendsgiving</strong> where 
+      each of us will be randomly assigned someone to buy a meal for. 
+    </p>
+    <p>
+      The meal you choose for your person can be something you think they’d love 
+      <strong>or</strong> something you'd like them to try — it’s totally up to you!  
+    </p>
+    <p>
+      Please keep the cost of the meal to <strong>no more than $30</strong>.
+    </p>
+    <p>
+      The Friendsgiving gathering will take place on 
+      <strong>November 23rd at 2:00 PM EST</strong>.
+    </p>
+    <p>
+      During the event, we will each try to guess <strong>who bought us our meal</strong>.  
+    </p>
+    <p style="font-style:italic;">
+      Click below to receive your private draw — don’t tell anyone who you got!
+    </p>
   </div>
 
   <button onclick="generateDraw()" style="margin-top:20px;">Generate Assignments</button>
 
   <div id="results" class="box hidden"></div>
+
 </div>
 
+<!-- JAVASCRIPT -->
 <script>
+// -------------------- PASSWORD PROTECTION --------------------
 function checkPW() {
-  const correct = "beensgreenstomatoespotatoes";
+  const correct = "beansgreenspotatoestomatoes";
   if (document.getElementById("pw").value === correct) {
     document.getElementById("pw-screen").classList.add("hidden");
     document.getElementById("main").classList.remove("hidden");
   } else alert("Incorrect password.");
 }
 
+// -------------------- ASSIGNMENT LOGIC --------------------
 function generateDraw() {
-  const names = ["Kevin","Devin","Justin H.","Zikiyah","Justin G.","Taylor"];
+  const names = [
+    "Kevin",
+    "Devin",
+    "Justin H.",
+    "Zikiyah",
+    "Justin G.",
+    "Taylor"
+  ];
+
   const partners = {
     "Kevin":"Devin","Devin":"Kevin",
     "Justin H.":"Zikiyah","Zikiyah":"Justin H.",
     "Justin G.":"Taylor","Taylor":"Justin G."
   };
+
   function shuffle(a){return a.sort(()=>Math.random()-0.5)}
 
   let receivers, assignment={}, valid=false;
+
   for(let attempt=0; attempt<600; attempt++){
     receivers = shuffle([...names]);
     let ok=true;
@@ -77,16 +135,17 @@ function generateDraw() {
     }
     if(ok){ valid=true; break; }
   }
+
   if(!valid){ alert("Try again."); return; }
 
   const res = document.getElementById("results");
-  res.innerHTML = "<h2>Reveal Your Person</h2>";
+  res.innerHTML = "<h2>Reveal Your Assignment</h2>";
   res.classList.remove("hidden");
 
   Object.keys(assignment).forEach(g=>{
     const btn = document.createElement("button");
     btn.textContent = "Reveal for " + g;
-    btn.onclick = ()=>alert(g + ", you are buying a gift for: " + assignment[g]);
+    btn.onclick = ()=>alert(g + ", you will be buying a meal for: " + assignment[g]);
     res.appendChild(btn);
     res.appendChild(document.createElement("br"));
     res.appendChild(document.createElement("br"));

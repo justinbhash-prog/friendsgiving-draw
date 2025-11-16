@@ -123,8 +123,54 @@
 
 <!-- JAVASCRIPT -->
 <script>
-// -------------------- PASSWORD PROTECTION --------------------
+// PASSWORD CHECK
 function checkPW() {
   const correct = "beansgreenspotatoestomatoes";
-  if (document.getElementById("pw").value === correct) {
-    document.getElementById("pw-s
+  const entered = document.getElementById("pw").value;
+  if (entered === correct) {
+    document.getElementById("pw-screen").classList.add("hidden");
+    document.getElementById("main").classList.remove("hidden");
+  } else {
+    alert("Incorrect password.");
+  }
+}
+
+// FIXED ASSIGNMENT (SAME EVERYWHERE)
+// No one gets themselves, no partners get each other.
+const assignment = {
+  "Kevin": "Justin H.",
+  "Devin": "Zikiyah",
+  "Justin H.": "Justin G.",
+  "Zikiyah": "Taylor",
+  "Justin G.": "Kevin",
+  "Taylor": "Devin"
+};
+
+// REVEAL LOGIC
+function revealPerson() {
+  const select = document.getElementById("who");
+  const name = select.value;
+  const resultEl = document.getElementById("result-text");
+
+  if (!name) {
+    alert("Please select your name first.");
+    return;
+  }
+
+  const target = assignment[name];
+
+  if (!target) {
+    resultEl.textContent = "Something looks off. Please check with the host.";
+    return;
+  }
+
+  resultEl.innerHTML = `
+    Hi <strong>${name}</strong>, you will be buying a meal for:
+    <br><br><span style="font-size:1.3rem;"><strong>${target}</strong></span>
+    <br><br>Remember: keep it under $30 and don't tell anyone who you got!
+  `;
+}
+</script>
+
+</body>
+</html>
